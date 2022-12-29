@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Normal use example
+make verify
+make golangci
+
+# Advanced example for only staged files
+
+COUNT_GOLANG_DIFF=$(git diff --name-only --staged '*.go' | wc -l)
+
+if [ "$COUNT_GOLANG_DIFF" -gt 0 ]
+then
+  make golangci
+  MAKE_GOLANGCI=$?
+
+  if [ "$MAKE_GOLANGCI" != 0 ]
+  then
+     echo "The command: 'make golangci' failed! Please fix and try again!"
+     exit 1
+  fi
+fi
